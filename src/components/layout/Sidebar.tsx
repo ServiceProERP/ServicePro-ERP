@@ -40,7 +40,7 @@ const menuItems: MenuItem[] = [
     children: [
       { label: 'Workforce list',       href: '/dashboard/hr/workforce' },
       { label: 'HR docs',              href: '/dashboard/hr/docs' },
-      { label: 'Technician requests',  href: '/dashboard/hr/technician-requests' },
+      
     ],
   },
   {
