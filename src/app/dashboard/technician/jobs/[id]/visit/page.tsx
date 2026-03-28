@@ -154,8 +154,7 @@ export default function SiteVisitPage() {
                 <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' as const }}>
                   {item.options.map(opt => {
                     const val = form[item.field as keyof typeof form]
-                    const isSelected = (val === 'Yes' && opt === 'Yes') || (val === false && opt === 'No') || (val === opt)
-                    const actualSelected = val === opt || (opt === 'Yes' && val === true) || (opt === 'No' && val === false)
+                    const actualSelected = val === opt
                     return (
                       <button key={opt} type="button" onClick={() => setField(item.field, opt)}
                         style={{ padding: '4px 10px', border: `0.5px solid ${actualSelected ? (opt === 'Yes' ? '#16a34a' : opt === 'No' ? '#dc2626' : '#94a3b8') : '#e2e8f0'}`, borderRadius: '5px', fontSize: '11px', cursor: 'pointer', fontWeight: actualSelected ? '600' : '400', background: actualSelected ? (opt === 'Yes' ? '#eaf3de' : opt === 'No' ? '#fef2f2' : '#f1f5f9') : '#fff', color: actualSelected ? (opt === 'Yes' ? '#16a34a' : opt === 'No' ? '#dc2626' : '#64748b') : '#64748b' }}>

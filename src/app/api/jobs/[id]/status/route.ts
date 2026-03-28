@@ -63,7 +63,7 @@ export async function GET(
         siteVisitLogs: { orderBy: { createdAt: 'desc' } },
         photos: { orderBy: { createdAt: 'desc' } },
         notes: { orderBy: { createdAt: 'desc' } },
-        checkIns: { orderBy: { createdAt: 'desc' } },
+        checkIns: { orderBy: { checkInTime: 'desc' } },
         invoices: { select: { id: true, invoiceNo: true, status: true, totalAmount: true } },
       },
     })
