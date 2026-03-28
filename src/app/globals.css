@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --sidebar-bg: #0f1729;
+  --sidebar-hover: #1a2740;
+  --sidebar-active: #1a2f50;
+  --sidebar-border: #1e2d4a;
+  --accent: #1a56db;
+  --accent-hover: #1648c0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #f8f9fb;
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

@@ -1,0 +1,628 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("staff")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Client {
+  id               String    @id @default(cuid())
+  clientCode       String    @unique
+  companyName      String
+  contactPerson    String
+  phone            String
+  email            String?
+  address          String?
+  city             String?
+  postalCode       String?
+  state            String?
+  country          String?   @default("India")
+  gstin            String?
+  creditLimit      Float     @default(0)
+  clientType       String?   @default("walk-in")
+  status           String    @default("active")
+  preferredContact String?   @default("phone")
+  industry         String?
+  notes            String?
+  isActive         Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  jobs             Job[]
+  invoices         Invoice[]
+  refunds          Refund[]
+}
+
+model Vendor {
+  id           String    @id @default(cuid())
+  vendorCode   String    @unique
+  companyName  String
+  contactPerson String
+  phone        String
+  email        String?
+  address      String?
+  city         String?
+  postalCode   String?
+  state        String?
+  country      String?   @default("India")
+  gstin        String?
+  category     String?
+  paymentTerms String?   @default("immediate")
+  leadTimeDays Int?
+  rating       Int?
+  notes        String?
+  status       String    @default("active")
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  payables     Payable[]
+}
+
+model Technician {
+  id        String   @id @default(cuid())
+  empCode   String   @unique
+  name      String
+  phone     String
+  email     String?
+  skill     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  jobs      Job[]
+}
+
+model Job {
+  id               String      @id @default(cuid())
+  jobNo            String      @unique
+  jobDate          DateTime    @default(now())
+  jobTitle         String
+  jobType          String      @default("onsite")
+  priority         String      @default("medium")
+  status           String      @default("open")
+  clientId         String
+  client           Client      @relation(fields: [clientId], references: [id])
+  technicianId     String?
+  technician       Technician? @relation(fields: [technicianId], references: [id])
+  siteAddress      String?
+  contactPerson    String?
+  contactPhone     String?
+  billingContact   String?
+  billingPhone     String?
+  machineName      String?
+  machineSerial    String?
+  faultDescription String?
+  deadline         DateTime?
+  estimatedAmount  Float?
+  actualAmount     Float?
+  remarks          String?
+  completedAt      DateTime?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  spareParts       SparePart[]
+  workOrders       WorkOrder[]
+  invoices         Invoice[]
+  refunds          Refund[]
+  siteVisitLogs SiteVisitLog[]
+  photos        JobPhoto[]
+  notes         JobNote[]
+  checkIns      CheckIn[]
+}
+
+model SparePart {
+  id         String   @id @default(cuid())
+  jobId      String
+  job        Job      @relation(fields: [jobId], references: [id])
+  partName   String
+  partCode   String?
+  quantity   Float
+  unitPrice  Float
+  totalPrice Float
+  createdAt  DateTime @default(now())
+}
+
+model WorkOrder {
+  id          String   @id @default(cuid())
+  woNo        String   @unique
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id])
+  description String
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Invoice {
+  id                    String    @id @default(cuid())
+  invoiceNo             String    @unique
+  invoiceDate           DateTime  @default(now())
+  clientId              String
+  client                Client    @relation(fields: [clientId], references: [id])
+  jobId                 String?
+  job                   Job?      @relation(fields: [jobId], references: [id])
+  subtotal              Float
+  discountAmount        Float     @default(0)
+  taxAmount             Float     @default(0)
+  additionalTax         Float     @default(0)
+  serviceCharges        Float     @default(0)
+  visitingCharges       Float     @default(0)
+  additionalChargesDesc String?
+  totalAmount           Float
+  status                String    @default("unpaid")
+  dueDate               DateTime?
+  paidAt                DateTime?
+  notes                 String?
+  paymentMode           String?
+  bankName              String?
+  accountNo             String?
+  ifscCode              String?
+  upiId                 String?
+  termsConditions       String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  payments              Payment[]
+  refunds               Refund[]
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+  amount      Float
+  paymentDate DateTime @default(now())
+  paymentMode String
+  paymentType String   @default("full")
+  reference   String?
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model InventoryItem {
+  id           String             @id @default(cuid())
+  itemCode     String             @unique
+  itemName     String
+  category     String?
+  unit         String             @default("pcs")
+  currentStock Float              @default(0)
+  minStock     Float              @default(0)
+  unitPrice    Float              @default(0)
+  isActive     Boolean            @default(true)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  transactions StockTransaction[]
+}
+
+model StockTransaction {
+  id        String        @id @default(cuid())
+  itemId    String
+  item      InventoryItem @relation(fields: [itemId], references: [id])
+  type      String
+  quantity  Float
+  reference String?
+  notes     String?
+  createdAt DateTime      @default(now())
+}
+
+model Employee {
+  id                String    @id @default(cuid())
+  empCode           String    @unique
+  name              String
+  designation       String?
+  department        String?
+  branch            String?
+  phone             String
+  email             String?
+  address           String?
+  city              String?
+  state             String?
+  country           String?   @default("India")
+  emergencyContact  String?
+  emergencyPhone    String?
+  joinDate          DateTime?
+  salary            Float     @default(0)
+  skill             String?
+  idProofType       String?
+  idProofNumber     String?
+  idProofUrl        String?
+  profilePhotoUrl   String?
+  status            String    @default("active")
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  payslips          Payslip[]
+  salaryStructure   SalaryStructure?
+  advances          SalaryAdvance[]
+  attendance        Attendance[]
+}
+
+model Payslip {
+  id          String   @id @default(cuid())
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id])
+  month       String
+  year        Int
+  basicSalary Float
+  allowances  Float    @default(0)
+  deductions  Float    @default(0)
+  netSalary   Float
+  status      String   @default("draft")
+  createdAt   DateTime @default(now())
+}
+
+model Quotation {
+  id          String    @id @default(cuid())
+  quotationNo String    @unique
+  clientName  String
+  clientEmail String?
+  clientPhone String?
+  items       String
+  subtotal    Float
+  taxAmount   Float     @default(0)
+  totalAmount Float
+  status      String    @default("draft")
+  validUntil  DateTime?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Expense {
+  id                String   @id @default(cuid())
+  expenseDate       DateTime @default(now())
+  category          String
+  description       String
+  amount            Float
+  paidBy            String?
+  responsiblePerson String?
+  ownedBy           String?
+  fileUrl           String?
+  reference         String?
+  createdAt         DateTime @default(now())
+}
+
+model HrDoc {
+  id           String    @id @default(cuid())
+  employeeId   String
+  employeeName String
+  docType      String
+  docName      String
+  fileUrl      String?
+  expiryDate   DateTime?
+  status       String    @default("pending")
+  approvedBy   String?
+  notes        String?
+  uploadedAt   DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model PurchaseOrder {
+  id           String    @id @default(cuid())
+  poNo         String    @unique
+  vendorId     String
+  vendorName   String
+  items        String
+  totalAmount  Float
+  status       String    @default("draft")
+  expectedDate DateTime?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model MaterialRequest {
+  id          String    @id @default(cuid())
+  reqNo       String    @unique
+  jobId       String
+  jobNo       String
+  itemName    String
+  quantity    Float
+  unit        String    @default("pcs")
+  requiredBy  DateTime?
+  status      String    @default("pending")
+  requestedBy String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Payable {
+  id          String    @id @default(cuid())
+  vendorId    String
+  vendor      Vendor    @relation(fields: [vendorId], references: [id])
+  description String
+  amount      Float
+  amountPaid  Float     @default(0)
+  paymentType String    @default("pending")
+  dueDate     DateTime?
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Refund {
+  id         String    @id @default(cuid())
+  refundNo   String    @unique
+  clientId   String
+  client     Client    @relation(fields: [clientId], references: [id])
+  jobId      String?
+  job        Job?      @relation(fields: [jobId], references: [id])
+  invoiceId  String?
+  invoice    Invoice?  @relation(fields: [invoiceId], references: [id])
+  refundType String    @default("full")
+  amount     Float
+  reason     String
+  status     String    @default("pending")
+  approvedBy String?
+  notes      String?
+  refundDate DateTime  @default(now())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+model SystemConfig {
+  id                      String   @id @default(cuid())
+  companyName             String   @default("")
+  companyTagline          String   @default("Professional Service Management")
+  companyAddress          String   @default("")
+  companyPhone            String   @default("")
+  companyEmail            String   @default("")
+  companyGstin            String   @default("")
+  jobPrefix               String   @default("JOB")
+  clientPrefix            String   @default("CLT")
+  vendorPrefix            String   @default("VND")
+  invoicePrefix           String   @default("INV")
+  quotationPrefix         String   @default("QT")
+  defaultTaxRate          String   @default("18")
+  defaultPaymentTerms     String   @default("30")
+  currency                String   @default("INR")
+  financialYearStart      String   @default("April")
+  enableEmailNotifications Boolean @default(false)
+  enableSMSNotifications  Boolean  @default(false)
+  enableOverdueAlerts     Boolean  @default(true)
+  enableLowStockAlerts    Boolean  @default(true)
+  overdueAlertDays        String   @default("1")
+  lowStockAlertLevel      String   @default("10")
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
+
+model SalaryStructure {
+  id                  String   @id @default(cuid())
+  employeeId          String   @unique
+  employee            Employee @relation(fields: [employeeId], references: [id])
+  basicPay            Float    @default(0)
+  hra                 Float    @default(0)
+  medicalAllowance    Float    @default(0)
+  conveyanceAllowance Float    @default(0)
+  specialAllowance    Float    @default(0)
+  otherAllowance      Float    @default(0)
+  bonus               Float    @default(0)
+  pf                  Float    @default(0)
+  pfEmployer          Float    @default(0)
+  esic                Float    @default(0)
+  esicEmployer        Float    @default(0)
+  tds                 Float    @default(0)
+  professionalTax     Float    @default(200)
+  otherDeduction      Float    @default(0)
+  bankName            String?
+  accountNo           String?
+  ifscCode            String?
+  bankBranch          String?
+  aadhaar             String?
+  panCard             String?
+  uanNo               String?
+  esicNo              String?
+  effectiveFrom       DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model SalaryAdvance {
+  id              String    @id @default(cuid())
+  employeeId      String
+  employee        Employee  @relation(fields: [employeeId], references: [id])
+  amount          Float
+  reason          String
+  approvedBy      String?
+  disbursedOn     DateTime  @default(now())
+  recoveryMonths  Int       @default(1)
+  amountRecovered Float     @default(0)
+  status          String    @default("active")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  recoveries      AdvanceRecovery[]
+}
+
+model AdvanceRecovery {
+  id              String        @id @default(cuid())
+  advanceId       String
+  advance         SalaryAdvance @relation(fields: [advanceId], references: [id])
+  payslipId       String?
+  month           String
+  year            Int
+  amount          Float
+  createdAt       DateTime      @default(now())
+}
+
+model Attendance {
+  id            String   @id @default(cuid())
+  employeeId    String
+  employee      Employee @relation(fields: [employeeId], references: [id])
+  month         String
+  year          Int
+  totalDays     Int      @default(26)
+  presentDays   Float    @default(26)
+  absentDays    Float    @default(0)
+  halfDays      Float    @default(0)
+  overtimeHours Float    @default(0)
+  leaveDays     Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([employeeId, month, year])
+}
+
+model PayrollRun {
+  id             String   @id @default(cuid())
+  month          String
+  year           Int
+  totalEmployees Int
+  totalGross     Float
+  totalDeductions Float
+  totalNet       Float
+  runBy          String?
+  status         String   @default("completed")
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  @@unique([month, year])
+}
+
+model TechnicianRequest {
+  id            String   @id @default(cuid())
+  requestNo     String   @unique
+  technicianId  String
+  technicianName String
+  empCode       String?
+  type          String   // job_transfer, leave, material, overtime, expense, tool, training, complaint, advance, handover
+  status        String   @default("pending") // pending, approved, rejected, cancelled
+  priority      String   @default("normal")  // low, normal, high, urgent
+  subject       String
+  description   String
+  reason        String?
+
+  // Job transfer specific
+  jobId         String?
+  currentJobNo  String?
+  transferToTechId String?
+  transferToTechName String?
+
+  // Leave specific
+  leaveType     String?  // sick, casual, earned, emergency, maternity, paternity
+  leaveFrom     DateTime?
+  leaveTo       DateTime?
+  leaveDays     Float?
+  leaveHandoverTo String?
+
+  // Overtime specific
+  overtimeDate  DateTime?
+  overtimeHours Float?
+  overtimeReason String?
+
+  // Expense specific
+  expenseAmount Float?
+  expenseCategory String?
+  expenseDate   DateTime?
+  expenseBillUrl String?
+
+  // Tool/equipment specific
+  toolName      String?
+  toolQuantity  Int?
+  toolNeededBy  DateTime?
+
+  // Handover specific
+  handoverJobIds String?  // JSON array of job IDs
+  handoverToTechId String?
+  handoverToTechName String?
+  handoverNotes String?
+  handoverDate  DateTime?
+
+  // Training specific
+  trainingTopic String?
+  trainingReason String?
+
+  // Admin response
+  approvedBy    String?
+  approvedAt    DateTime?
+  rejectionReason String?
+  adminNotes    String?
+
+  attachmentUrl String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model SiteVisitLog {
+  id                    String   @id @default(cuid())
+  jobId                 String
+  job                   Job      @relation(fields: [jobId], references: [id])
+  technicianId          String?
+  visitDate             DateTime @default(now())
+  arrivalTime           String?
+  departureTime         String?
+  onSiteContact         String?
+  onSiteContactSign     String?
+  machineConditionBefore String?
+  observedProblem       String?
+  rootCause             String?
+  actionTaken           String?
+  machineConditionAfter String?
+  inspectionDone        Boolean  @default(false)
+  cleaningDone          Boolean  @default(false)
+  calibrationDone       String?
+  lubricationDone       String?
+  partsReplaced         Boolean  @default(false)
+  testRunDone           Boolean  @default(false)
+  machineHandedOver     Boolean  @default(false)
+  nextServiceDate       DateTime?
+  additionalRecommendations String?
+  partsToOrder          String?
+  clientRepresentative  String?
+  clientSatisfaction    String?
+  clientComments        String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model JobPhoto {
+  id          String   @id @default(cuid())
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id])
+  url         String
+  caption     String?
+  uploadedBy  String?
+  createdAt   DateTime @default(now())
+}
+
+model JobNote {
+  id          String   @id @default(cuid())
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id])
+  note        String
+  addedBy     String
+  addedByName String
+  createdAt   DateTime @default(now())
+}
+
+model CheckIn {
+  id           String   @id @default(cuid())
+  jobId        String
+  job          Job      @relation(fields: [jobId], references: [id])
+  technicianId String?
+  checkInTime  DateTime @default(now())
+  checkOutTime DateTime?
+  checkInLat   Float?
+  checkInLng   Float?
+  checkOutLat  Float?
+  checkOutLng  Float?
+  notes        String?
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("info")
+  isRead    Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+}
