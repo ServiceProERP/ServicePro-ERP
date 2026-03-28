@@ -65,44 +65,45 @@ export default function LoginPage() {
           justifyContent: 'space-between',
         }}>
           <div>
-            <div style={{
-              fontSize: '22px',
-              fontWeight: '600',
-              color: '#fff',
-              marginBottom: '4px',
-            }}>
+            <div style={{ fontSize: '22px', fontWeight: '600', color: '#fff', marginBottom: '4px' }}>
               Service Pro <span style={{ color: '#4a9eff' }}>ERP</span>
             </div>
-            <div style={{
-              fontSize: '11px',
-              color: '#4a6080',
-              letterSpacing: '1px',
-              textTransform: 'uppercase',
-            }}>
-              Production v2.0
+            <div style={{ fontSize: '11px', color: '#4a6080', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              Built for Indian Service Industry
             </div>
           </div>
 
           <div>
-            <div style={{
-              fontSize: '28px',
-              fontWeight: '600',
-              color: '#fff',
-              lineHeight: '1.3',
-              marginBottom: '16px',
-            }}>
-              Manage your service business smarter
+            <div style={{ fontSize: '26px', fontWeight: '700', color: '#fff', lineHeight: '1.35', marginBottom: '20px' }}>
+              From job card to payment — everything in one place
             </div>
-            <div style={{ color: '#6080a0', fontSize: '13px', lineHeight: '1.8' }}>
-              ✓ Job tracking & dispatch<br />
-              ✓ Invoice & payment management<br />
-              ✓ Spare parts & inventory<br />
-              ✓ Reports & analytics
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {[
+                { icon: '⚡', title: 'Zero missed jobs', desc: 'Assign, track and close every service job in real time' },
+                { icon: '💰', title: 'Get paid faster', desc: 'Auto-generate invoices the moment a job is completed' },
+                { icon: '👷', title: 'Control your team', desc: 'Know exactly what every technician is doing, right now' },
+                { icon: '📊', title: 'Run on data', desc: 'Reports that tell you where to grow and what to fix' },
+              ].map(item => (
+                <div key={item.title} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <div style={{
+                    width: '32px', height: '32px', borderRadius: '8px',
+                    background: '#1a2f50', display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', fontSize: '16px', flexShrink: 0,
+                  }}>
+                    {item.icon}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#fff', marginBottom: '2px' }}>{item.title}</div>
+                    <div style={{ fontSize: '12px', color: '#5a7a9a', lineHeight: '1.5' }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
           <div style={{ fontSize: '11px', color: '#3a5070' }}>
-            © 2025 Service Pro ERP
+            © 2026 Service Pro ERP. All rights reserved.
           </div>
         </div>
 
@@ -114,31 +115,16 @@ export default function LoginPage() {
           flexDirection: 'column',
           justifyContent: 'center',
         }}>
-          <div style={{
-            fontSize: '22px',
-            fontWeight: '600',
-            color: '#0f172a',
-            marginBottom: '6px',
-          }}>
+          <div style={{ fontSize: '22px', fontWeight: '600', color: '#0f172a', marginBottom: '6px' }}>
             Welcome back
           </div>
-          <div style={{
-            fontSize: '13px',
-            color: '#64748b',
-            marginBottom: '32px',
-          }}>
+          <div style={{ fontSize: '13px', color: '#64748b', marginBottom: '32px' }}>
             Sign in to your account to continue
           </div>
 
           <form onSubmit={handleLogin}>
             <div style={{ marginBottom: '16px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '12px',
-                fontWeight: '500',
-                color: '#475569',
-                marginBottom: '6px',
-              }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#475569', marginBottom: '6px' }}>
                 Email address
               </label>
               <input
@@ -148,27 +134,17 @@ export default function LoginPage() {
                 placeholder="you@company.com"
                 required
                 style={{
-                  width: '100%',
-                  height: '40px',
-                  padding: '0 12px',
-                  border: '0.5px solid #d1d5db',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  outline: 'none',
-                  background: '#fff',
-                  transition: 'border 0.15s',
+                  width: '100%', height: '40px', padding: '0 12px',
+                  border: '0.5px solid #d1d5db', borderRadius: '8px',
+                  fontSize: '14px', outline: 'none', background: '#fff', transition: 'border 0.15s',
                 }}
+                onFocus={e => e.target.style.borderColor = '#1a56db'}
+                onBlur={e => e.target.style.borderColor = '#d1d5db'}
               />
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '12px',
-                fontWeight: '500',
-                color: '#475569',
-                marginBottom: '6px',
-              }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#475569', marginBottom: '6px' }}>
                 Password
               </label>
               <input
@@ -178,27 +154,20 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
                 style={{
-                  width: '100%',
-                  height: '40px',
-                  padding: '0 12px',
-                  border: '0.5px solid #d1d5db',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  outline: 'none',
-                  background: '#fff',
+                  width: '100%', height: '40px', padding: '0 12px',
+                  border: '0.5px solid #d1d5db', borderRadius: '8px',
+                  fontSize: '14px', outline: 'none', background: '#fff',
                 }}
+                onFocus={e => e.target.style.borderColor = '#1a56db'}
+                onBlur={e => e.target.style.borderColor = '#d1d5db'}
               />
             </div>
 
             {error && (
               <div style={{
-                background: '#fef2f2',
-                border: '0.5px solid #fecaca',
-                color: '#dc2626',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                fontSize: '13px',
-                marginBottom: '16px',
+                background: '#fef2f2', border: '0.5px solid #fecaca',
+                color: '#dc2626', padding: '10px 14px',
+                borderRadius: '8px', fontSize: '13px', marginBottom: '16px',
               }}>
                 {error}
               </div>
@@ -208,33 +177,20 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               style={{
-                width: '100%',
-                height: '42px',
+                width: '100%', height: '42px',
                 background: loading ? '#93a3b8' : '#1a56db',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: '500',
+                color: '#fff', border: 'none', borderRadius: '8px',
+                fontSize: '14px', fontWeight: '500',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 transition: 'background 0.15s',
               }}
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? 'Signing in...' : 'Sign in →'}
             </button>
           </form>
 
-          <div style={{
-            marginTop: '32px',
-            padding: '14px',
-            background: '#f8f9fb',
-            borderRadius: '8px',
-            fontSize: '12px',
-            color: '#64748b',
-          }}>
-            <strong style={{ color: '#0f172a' }}>Demo credentials</strong><br />
-            Email: admin@servicepro.com<br />
-            Password: admin123
+          <div style={{ marginTop: '32px', fontSize: '12px', color: '#94a3b8', textAlign: 'center' }}>
+            Having trouble signing in? Contact your administrator.
           </div>
         </div>
       </div>
