@@ -36,6 +36,7 @@ export async function GET(req: NextRequest) {
         include: {
           client: { select: { companyName: true } },
           technician: { select: { name: true } },
+          spareParts: true, // ✅ FIX: was missing — caused flatMap crash on work orders page
         },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
         technicianId: body.technicianId || null,
         siteAddress: body.siteAddress || null,
         billingContact: body.billingContact || null,
-        billingPhone: body.billingPhone || null,  
+        billingPhone: body.billingPhone || null,
         contactPerson: body.contactPerson || null,
         contactPhone: body.contactPhone || null,
         machineName: body.machineName || null,
